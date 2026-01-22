@@ -1,0 +1,167 @@
+# PC Language - OSINT (Open Source Intelligence) Demo
+
+print("=" * 60)
+print("OSINT - Open Source Intelligence Toolkit")
+print("=" * 60)
+print("")
+
+# ============================================================================
+# 1. DNS Intelligence
+# ============================================================================
+print("[1] DNS Intelligence")
+print("-" * 60)
+
+# DNS Lookups
+print("  DNS A Records for google.com:")
+a_records = dns_lookup("google.com", "A")
+print("    Found", len(a_records), "records")
+if len(a_records) > 0:
+    print("    First:", a_records[0])
+
+# Reverse DNS
+print("  Reverse DNS for 8.8.8.8:")
+ptr = reverse_dns("8.8.8.8")
+print("    PTR:", ptr)
+
+print("")
+
+# ============================================================================
+# 2. IP Geolocation
+# ============================================================================
+print("[2] IP Geolocation")
+print("-" * 60)
+
+# GeoIP Lookup
+print("  Geolocation for 8.8.8.8:")
+geo_info = geoip("8.8.8.8")
+if geo_info != None:
+    print("    Result:", geo_info)
+
+print("")
+
+# ============================================================================
+# 3. Email Intelligence
+# ============================================================================
+print("[3] Email Intelligence")
+print("-" * 60)
+
+# Email Verification
+print("  Email validation tests:")
+test_emails = ["user@gmail.com", "invalid@nonexistent.xyz", "notanemail"]
+for email in test_emails:
+    valid = email_verify(email)
+    status = "✓ Valid" if valid else "✗ Invalid"
+    print("    " + email + ":", status)
+
+print("")
+
+# ============================================================================
+# 4. Username OSINT
+# ============================================================================
+print("[4] Username Intelligence")
+print("-" * 60)
+
+# Username search across platforms
+print("  Searching username 'github':")
+platforms = ["github", "twitter", "reddit"]
+results = username_search("github", platforms)
+print("    Results:", results)
+
+print("")
+
+# ============================================================================
+# 5. Web Intelligence
+# ============================================================================
+print("[5] Web Intelligence")
+print("-" * 60)
+
+# Google Dork Generation
+print("  Google Dork examples:")
+dork1 = google_dork("password", "example.com", "pdf")
+print("    With filters:", dork1)
+
+dork2 = google_dork("admin login", "", "")
+print("    Simple:", dork2)
+
+# Wayback Machine Check
+print("  Wayback Machine check for google.com:")
+archived = wayback_check("google.com")
+status = "✓ Archived" if archived else "✗ Not found"
+print("    Status:", status)
+
+# HTTP Headers
+print("  HTTP Headers for example.com:")
+headers = http_headers("http://example.com")
+print("    Headers found:", len(keys(headers)) if headers != None else 0)
+
+print("")
+
+# ============================================================================
+# 6. SSL/Certificate Intelligence
+# ============================================================================
+print("[6] SSL Certificate Intelligence")
+print("-" * 60)
+
+print("  SSL Certificate for google.com:")
+cert = ssl_cert_info("google.com")
+if cert != None:
+    print("    Certificate info retrieved")
+
+print("")
+
+# ============================================================================
+# 7. Metadata Extraction
+# ============================================================================
+print("[7] Metadata Extraction")
+print("-" * 60)
+
+print("  Extracting metadata from /bin/ls:")
+metadata = extract_metadata("/bin/ls")
+if metadata != None:
+    meta_keys = keys(metadata)
+    print("    Metadata fields found:", len(meta_keys))
+
+print("")
+
+# ============================================================================
+# 8. Subdomain Enumeration (Demo)
+# ============================================================================
+print("[8] Subdomain Enumeration")
+print("-" * 60)
+
+print("  Demo: Subdomain enumeration")
+print("    (Would scan www, mail, ftp, etc.)")
+print("    Use: subdomain_enum('example.com', ['www', 'mail', 'ftp'])")
+
+print("")
+
+# ============================================================================
+# Summary
+# ============================================================================
+print("=" * 60)
+print("OSINT Toolkit Summary")
+print("=" * 60)
+print("")
+print("Available Functions:")
+print("  ✓ dns_lookup(domain, type) - DNS record query")
+print("  ✓ whois(domain_or_ip) - Whois information")
+print("  ✓ subdomain_enum(domain, wordlist) - Find subdomains")
+print("  ✓ geoip(ip) - IP geolocation")
+print("  ✓ email_verify(email) - Email validation")
+print("  ✓ username_search(username, platforms) - Cross-platform search")
+print("  ✓ google_dork(keyword, site, filetype) - Dork generator")
+print("  ✓ wayback_check(url) - Archive.org check")
+print("  ✓ http_headers(url) - HTTP header extraction")
+print("  ✓ ssl_cert_info(domain) - SSL certificate info")
+print("  ✓ extract_metadata(file) - File metadata extraction")
+print("  ✓ reverse_dns(ip) - PTR record lookup")
+print("  ✓ shodan_search(query, api_key) - Shodan API search")
+print("")
+print("Total: 13 OSINT functions")
+print("")
+print("Note: Some functions require external tools:")
+print("  - dig (DNS queries)")
+print("  - whois (domain info)")
+print("  - curl (HTTP requests)")
+print("  - openssl (SSL cert)")
+print("  - exiftool (metadata, optional)")

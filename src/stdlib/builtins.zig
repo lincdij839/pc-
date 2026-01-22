@@ -12,6 +12,7 @@ const web = @import("web.zig");
 const forensics = @import("forensics.zig");
 const reverse = @import("reverse.zig");
 const attack_defense = @import("attack_defense.zig");
+const osint = @import("osint.zig");
 
 // Function signature for all built-in functions
 pub const BuiltinFn = *const fn (*Interpreter, []Value) InterpreterError!Value;
@@ -152,6 +153,20 @@ pub const builtins = std.StaticStringMap(BuiltinFn).initComptime(.{
     .{ "detect_port_scan", attack_defense.builtin_detect_port_scan },
     .{ "block_ip", attack_defense.builtin_block_ip },
     .{ "check_rate_limit", attack_defense.builtin_check_rate_limit },
+    // OSINT (Open Source Intelligence)
+    .{ "dns_lookup", osint.builtin_dns_lookup },
+    .{ "whois", osint.builtin_whois },
+    .{ "subdomain_enum", osint.builtin_subdomain_enum },
+    .{ "geoip", osint.builtin_geoip },
+    .{ "email_verify", osint.builtin_email_verify },
+    .{ "username_search", osint.builtin_username_search },
+    .{ "google_dork", osint.builtin_google_dork },
+    .{ "wayback_check", osint.builtin_wayback_check },
+    .{ "http_headers", osint.builtin_http_headers },
+    .{ "ssl_cert_info", osint.builtin_ssl_cert_info },
+    .{ "extract_metadata", osint.builtin_extract_metadata },
+    .{ "reverse_dns", osint.builtin_reverse_dns },
+    .{ "shodan_search", osint.builtin_shodan_search },
 });
 
 // ============================================================================
