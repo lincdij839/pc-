@@ -1,0 +1,132 @@
+# PC Language - Attack & Defense Demo
+
+print("========================================")
+print("  Attack & Defense Toolkit")
+print("========================================")
+print("")
+
+# ============================================================================
+# 1. Network Reconnaissance
+# ============================================================================
+print("[1] Network Reconnaissance:")
+print("")
+
+# Ping test
+print("  Testing connectivity:")
+target = "127.0.0.1"
+is_alive = ping(target, 2)
+if is_alive:
+    print("  ✓ Host", target, "is alive")
+else:
+    print("  ✗ Host", target, "is dead")
+print("")
+
+# Single port scan
+print("  Single port scan:")
+port_open = scan_port("127.0.0.1", 22)
+if port_open:
+    print("  ✓ Port 22/SSH is OPEN")
+else:
+    print("  ✗ Port 22/SSH is CLOSED")
+print("")
+
+# Multiple ports scan
+print("  Scanning multiple ports:")
+ports_to_scan = [22, 80, 443, 8080]
+open_ports = scan_ports("127.0.0.1", ports_to_scan)
+print("  Open ports:", open_ports)
+print("")
+
+# Common ports scan
+print("  Scanning common service ports...")
+common_open = scan_common_ports("127.0.0.1")
+print("  Found", len(common_open), "open ports")
+print("")
+
+# ============================================================================
+# 2. Service Detection
+# ============================================================================
+print("[2] Service Detection:")
+print("")
+
+test_port = 80
+service = detect_service("127.0.0.1", test_port)
+print("  Port", test_port, "->", service)
+
+test_port = 443
+service = detect_service("127.0.0.1", test_port)
+print("  Port", test_port, "->", service)
+
+test_port = 3306
+service = detect_service("127.0.0.1", test_port)
+print("  Port", test_port, "->", service)
+print("")
+
+# ============================================================================
+# 3. Vulnerability Checking
+# ============================================================================
+print("[3] Vulnerability Assessment:")
+print("")
+
+# SQL injection check (example)
+print("  Checking for SQL injection...")
+test_url = "http://example.com/page?id=1"
+vuln = check_vuln_sql(test_url)
+if vuln:
+    print("  ⚠️  Possible SQL injection vulnerability!")
+else:
+    print("  ✓ No obvious SQL injection detected")
+print("")
+
+# ============================================================================
+# 4. Packet Crafting
+# ============================================================================
+print("[4] Packet Crafting:")
+print("")
+
+tcp_syn = craft_tcp_syn("192.168.1.1", 80)
+print("  TCP SYN packet:", tcp_syn)
+print("")
+
+# ============================================================================
+# 5. Defense Mechanisms
+# ============================================================================
+print("[5] Defense Tools:")
+print("")
+
+# Generate IP block command
+malicious_ip = "192.168.1.100"
+block_cmd = block_ip(malicious_ip)
+print("  Block IP command:")
+print("   ", block_cmd)
+print("")
+
+# Rate limiting check
+client_ip = "192.168.1.50"
+allow = check_rate_limit(client_ip, 100, 60)
+if allow:
+    print("  ✓ Request from", client_ip, "allowed (under rate limit)")
+else:
+    print("  ✗ Request from", client_ip, "blocked (rate limit exceeded)")
+print("")
+
+print("========================================")
+print("  Attack & Defense Summary")
+print("========================================")
+print("")
+print("Attack Tools:")
+print("  ✓ Port scanning (single/multiple/common)")
+print("  ✓ Service detection")
+print("  ✓ Banner grabbing")
+print("  ✓ Vulnerability checking (SQL/XSS)")
+print("  ✓ Packet crafting helpers")
+print("  ✓ Network tracing")
+print("")
+print("Defense Tools:")
+print("  ✓ Port scan detection")
+print("  ✓ IP blocking (iptables)")
+print("  ✓ Rate limiting")
+print("  ✓ Traffic analysis")
+print("")
+print("⚠️  IMPORTANT: Use responsibly and legally!")
+print("    These tools are for educational purposes only.")

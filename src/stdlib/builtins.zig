@@ -11,6 +11,7 @@ const string_utils = @import("string_utils.zig");
 const web = @import("web.zig");
 const forensics = @import("forensics.zig");
 const reverse = @import("reverse.zig");
+const attack_defense = @import("attack_defense.zig");
 
 // Function signature for all built-in functions
 pub const BuiltinFn = *const fn (*Interpreter, []Value) InterpreterError!Value;
@@ -137,6 +138,20 @@ pub const builtins = std.StaticStringMap(BuiltinFn).initComptime(.{
     .{ "cyclic_find", reverse.builtin_cyclic_find },
     .{ "shellcode_nop", reverse.builtin_shellcode_nop },
     .{ "shellcode_int80", reverse.builtin_shellcode_int80 },
+    // Attack & Defense
+    .{ "scan_port", attack_defense.builtin_scan_port },
+    .{ "scan_ports", attack_defense.builtin_scan_ports },
+    .{ "scan_common_ports", attack_defense.builtin_scan_common_ports },
+    .{ "get_banner", attack_defense.builtin_get_banner },
+    .{ "detect_service", attack_defense.builtin_detect_service },
+    .{ "check_vuln_sql", attack_defense.builtin_check_vuln_sql },
+    .{ "check_vuln_xss", attack_defense.builtin_check_vuln_xss },
+    .{ "ping", attack_defense.builtin_ping },
+    .{ "traceroute", attack_defense.builtin_traceroute },
+    .{ "craft_tcp_syn", attack_defense.builtin_craft_tcp_syn },
+    .{ "detect_port_scan", attack_defense.builtin_detect_port_scan },
+    .{ "block_ip", attack_defense.builtin_block_ip },
+    .{ "check_rate_limit", attack_defense.builtin_check_rate_limit },
 });
 
 // ============================================================================
