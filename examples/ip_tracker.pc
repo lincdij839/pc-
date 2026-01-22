@@ -1,0 +1,33 @@
+# PC Language - IP Location Tracker (简化版)
+# 实时追踪IP地址的地理位置信息
+
+print("=" * 60)
+print("IP地址位置追踪工具")
+print("=" * 60)
+print("")
+
+# 追踪IP 1: Google DNS  
+print("[追踪 1/2] 8.8.8.8 (Google DNS)")
+print("-" * 60)
+
+geo1 = geoip("8.8.8.8")
+print("GeoIP结果:", geo1)
+
+host1 = reverse_dns("8.8.8.8")
+print("反向DNS:", host1)
+print("")
+
+# 追踪IP 2: Cloudflare DNS
+print("[追踪 2/2] 1.1.1.1 (Cloudflare DNS)")
+print("-" * 60)
+
+geo2 = geoip("1.1.1.1") 
+print("GeoIP结果:", geo2)
+
+host2 = reverse_dns("1.1.1.1")
+print("反向DNS:", host2)
+print("")
+
+print("=" * 60)
+print("追踪完成!")
+print("=" * 60)

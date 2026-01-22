@@ -155,6 +155,36 @@ print(recovered)  # "flag"
 - `len(x)` - 返回長度（支持字串、列表、字典）
 - `range(n)` - 生成範圍
 
+### OSINT（開源情報）模組
+- `geoip(ip)` - IP 地理位置查詢（國家、城市、ISP）
+- `reverse_dns(ip)` - 反向 DNS 查詢
+- `dns_lookup(domain, record_type)` - DNS 記錄查詢
+- `whois(domain)` - WHOIS 域名查詢
+- `subdomain_enum(domain)` - 子域名枚舉
+- `email_verify(email)` - 郵箱驗證（MX 記錄檢查）
+- `username_search(username)` - 用戶名跨平台搜索
+- `google_dork(keyword, site, filetype)` - Google Dork 生成器
+- `wayback_check(url)` - Wayback Machine 檢查
+- `http_headers(url)` - HTTP 頭信息提取
+- `ssl_cert_info(domain)` - SSL 證書信息查詢
+- `extract_metadata(file_path)` - 文件元數據提取
+- `shodan_search(query, api_key)` - Shodan API 搜索
+
+### Attack-Defense（攻防）模組
+- `scan_port(host, port)` - 單端口掃描
+- `scan_ports(host, ports)` - 多端口掃描
+- `scan_common_ports(host)` - 常見端口掃描
+- `get_banner(host, port)` - 服務 Banner 獲取
+- `detect_service(host, port)` - 服務檢測
+- `check_vuln_sql(url)` - SQL 注入檢測
+- `check_vuln_xss(url)` - XSS 漏洞檢測
+- `ping(host)` - Ping 主機
+- `traceroute(host)` - 路由追踪
+- `craft_tcp_syn(dst_ip, dst_port)` - 構造 TCP SYN 包
+- `detect_port_scan(log_file)` - 端口掃描檢測
+- `block_ip(ip)` - 生成 IP 封禁命令
+- `check_rate_limit(ip, threshold)` - 檢查訪問頻率
+
 ### 類型轉換
 - `str(x)` - 轉換為字串
 - `int(x)` - 轉換為整數
@@ -239,11 +269,16 @@ print(recovered)  # "flag"
 | 標準庫 | 95% | ✅ 完成 |
 | PWN 模組 | 90% | ✅ 完成 |
 | 密碼學模組 | 98% | ✅ 完成 |
+| Reverse 模組 | 85% | ✅ 完成 |
+| OSINT 模組 | 65% | 🚧 開發中 |
+| Attack-Defense | 75% | 🚧 開發中 |
+| Web 安全 | 80% | ✅ 完成 |
+| Forensics | 70% | 🚧 開發中 |
 | 文件操作 | 100% | ✅ 完成 |
 | 數據結構 | 95% | ✅ 列表/字典完成 |
-| LLVM 後端 | 0% | 🚧 計劃中 |
+| LLVM 後端 | 0% | 📋 計劃中 |
 
-**總體完成度：96.3%**
+**總體完成度：85.7%**（CTF 實戰可用）
 
 ## 🛠️ 技術架構
 
@@ -254,32 +289,36 @@ print(recovered)  # "flag"
 
 ## 📝 範例程序
 
-查看 [examples/](examples/) 目錄獲取更多範例：
+查看 [examples/](examples/) 目錄獲取更多範例（已精簡至 10 個核心示例）：
 
 ### 基礎示例
-- `hello.pc` - Hello World
-- `test_math.pc` - 數學函數演示
-- `test_string.pc` - 字串操作演示
-- `test_hex.pc` - 十六進制字面量演示
+- `hello.pc` - Hello World 入門示例
 
-### 數據結構
-- `test_list.pc` - 列表操作演示
-- `test_dict.pc` - 字典操作演示
-- `test_dict_assign.pc` - 字典賦值演示
+### CTF 綜合測試
+- `ctf_all_categories.pc` - CTF 7 大類別功能展示
+- `ctf_verification_fast.pc` - CTF 功能快速驗證（29 項測試）
 
-### CTF 工具
-- `rop_builder.pc` - ROP Chain 構建器
+### Crypto（密碼學）
+- `rsa_demo.pc` - RSA 攻擊演示（Fermat 分解、Wiener 攻擊）
+
+### Pwn（二進制利用）
 - `exploit_gen.pc` - Exploit Payload 生成器
-- `ctf_helper.pc` - CTF 工具包
+- `rop_builder.pc` - ROP Chain 構建器
 
-### PWN 模組
-- `test_pack_simple.pc` - Pack/Unpack 演示
-- `test_pwn.pc` - PWN 功能綜合演示
+### Reverse（逆向工程）
+- `reverse_demo.pc` - 逆向工程完整演示（ELF 解析、ROP 搜索）
+- `reverse_simple.pc` - 逆向工程簡化演示（不依賴外部工具）
 
-### 密碼學模組
-- `test_rsa_attack.pc` - RSA 攻擊演示
-- `rsa_demo.pc` - 密碼學功能演示
-- `ctf_toolkit.pc` - CTF 綜合工具包演示
+### Attack-Defense（攻防）
+- `attack_defense_demo.pc` - 攻防工具包演示（端口掃描、漏洞檢測）
+
+### OSINT（開源情報）
+- `osint_demo.pc` - OSINT 情報收集演示（DNS、GeoIP、用戶名搜索）
+- `ip_tracker.pc` - IP 地址位置追蹤工具（實時地理位置查詢）
+
+**功能覆蓋**：10 個核心示例，覆蓋 8 大 CTF 類別，展示 97+ 個 CTF 專用函數
+
+詳細說明請查看 [examples/README.md](examples/README.md)
 
 ## 🧪 測試
 
@@ -322,11 +361,15 @@ print(recovered)  # "flag"
 - [x] 字典數據結構和操作
 - [x] 字典/列表索引賦值（dict[key] = value）
 - [x] 十六進制/八進制/二進制字面量
-- [x] 字符串拼接
+- [x] 字符串拼接和字符串乘法（"=" * 60）
 - [x] 密碼學工具鏈（Hash、RSA、編碼）
 - [x] AES 加密/解密（CBC 模式）
 - [x] 文件讀寫操作（二進制）
 - [x] CTF 常用工具函數（bytes_to_long 等）
+- [x] OSINT 開源情報模組（13 個函數）
+- [x] Attack-Defense 攻防模組（13 個函數）
+- [x] 逆向工程模組（ELF 解析、ROP 搜索）
+- [x] IP 地址位置追蹤工具
 
 ## 📄 許可證
 
