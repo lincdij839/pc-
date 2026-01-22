@@ -1,8 +1,0 @@
-# Test pack only
-packed = p32(4194304)
-print(len(packed))
-
-hex_val = hex(255)
-print(hex_val)
-
-print(888)
