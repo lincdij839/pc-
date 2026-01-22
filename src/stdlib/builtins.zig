@@ -25,6 +25,7 @@ pub const builtins = std.StaticStringMap(BuiltinFn).initComptime(.{
     .{ "pow", builtin_pow },
     .{ "upper", builtin_upper },
     .{ "lower", builtin_lower },
+    .{ "append", builtin_append },
 });
 
 // ============================================================================
@@ -40,11 +41,12 @@ fn builtin_print(interp: *Interpreter, args: []Value) InterpreterError!Value {
     return Value.None;
 }
 
-// len(obj) - Return length of string
+// len(obj) - Return length of string or list
 fn builtin_len(_: *Interpreter, args: []Value) InterpreterError!Value {
     if (args.len == 0) return Value{ .Int = 0 };
     return switch (args[0]) {
         .String => |s| Value{ .Int = @intCast(s.len) },
+        .List => |l| Value{ .Int = @intCast(l.items.len) },
         else => Value{ .Int = 0 },
     };
 }
@@ -191,4 +193,16 @@ fn builtin_lower(interp: *Interpreter, args: []Value) InterpreterError!Value {
         result[i] = std.ascii.toLower(c);
     }
     return Value{ .String = result };
+}
+
+// append(list, value) - Return new list with value appended
+fn builtin_append(interp: *Interpreter, args: []Value) InterpreterError!Value {
+    if (args.len != 2) return Value.None;
+    if (args[0] != .List) return Value.None;
+    
+    // Create new list with appended value
+    var new_list = std.ArrayList(Value).init(interp.allocator);
+    try new_list.appendSlice(args[0].List.items);
+    try new_list.append(args[1]);
+    return Value{ .List = new_list };
 }

@@ -329,24 +329,25 @@ pub const Parser = struct {
 
     fn parsePrimary(self: *Parser) ParserError!*Node {
         const tok = self.current();
+        var node: *Node = undefined;
 
         switch (tok.kind) {
             .Integer => {
                 self.advance();
                 const value = try std.fmt.parseInt(i64, tok.lexeme, 10);
-                return try ast.createInt(self.allocator, value);
+                node = try ast.createInt(self.allocator, value);
             },
             .String => {
                 self.advance();
-                const node = try self.allocator.create(Node);
-                node.* = Node{ .LiteralString = .{ .value = tok.lexeme } };
-                return node;
+                const str_node = try self.allocator.create(Node);
+                str_node.* = Node{ .LiteralString = .{ .value = tok.lexeme } };
+                node = str_node;
             },
             .True, .False => {
                 self.advance();
-                const node = try self.allocator.create(Node);
-                node.* = Node{ .LiteralBool = .{ .value = (tok.kind == .True) } };
-                return node;
+                const bool_node = try self.allocator.create(Node);
+                bool_node.* = Node{ .LiteralBool = .{ .value = (tok.kind == .True) } };
+                node = bool_node;
             },
             .Identifier => {
                 self.advance();
@@ -364,20 +365,49 @@ pub const Parser = struct {
                     }
 
                     _ = try self.expect(.RightParen);
-                    return call;
+                    node = call;
+                } else {
+                    node = try ast.createIdentifier(self.allocator, tok.lexeme);
                 }
-                return try ast.createIdentifier(self.allocator, tok.lexeme);
             },
             .LeftParen => {
                 _ = try self.expect(.LeftParen);
-                const expr = try self.parseExpression();
+                node = try self.parseExpression();
                 _ = try self.expect(.RightParen);
-                return expr;
+            },
+            .LeftBracket => {
+                node = try self.parseListLiteral();
             },
             else => {
                 std.debug.print("Unexpected token in expression: {s}\n", .{@tagName(tok.kind)});
                 return ParserError.UnexpectedToken;
             },
         }
+
+        // Handle index access: list[0]
+        while (self.current().kind == .LeftBracket) {
+            _ = try self.expect(.LeftBracket);
+            const index = try self.parseExpression();
+            _ = try self.expect(.RightBracket);
+            const access_node = try self.allocator.create(Node);
+            access_node.* = Node{ .IndexAccess = .{ .object = node, .index = index } };
+            node = access_node;
+        }
+
+        return node;
+    }
+
+    fn parseListLiteral(self: *Parser) !*Node {
+        _ = try self.expect(.LeftBracket);
+        const list = try ast.createNode(self.allocator, .LiteralList);
+
+        while (self.current().kind != .RightBracket and self.current().kind != .Eof) {
+            const elem = try self.parseExpression();
+            try list.LiteralList.elements.append(elem);
+            if (!self.match(.Comma)) break;
+        }
+
+        _ = try self.expect(.RightBracket);
+        return list;
     }
 };

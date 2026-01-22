@@ -20,6 +20,8 @@ pub const NodeKind = enum {
     LiteralFloat,
     LiteralString,
     LiteralBool,
+    LiteralList,
+    IndexAccess,
     Block,
 };
 
@@ -95,6 +97,13 @@ pub const Node = union(NodeKind) {
     LiteralBool: struct {
         value: bool,
     },
+    LiteralList: struct {
+        elements: std.ArrayList(*Node),
+    },
+    IndexAccess: struct {
+        object: *Node,
+        index: *Node,
+    },
     Block: struct {
         statements: std.ArrayList(*Node),
     },
@@ -105,6 +114,7 @@ pub fn createNode(allocator: std.mem.Allocator, kind: NodeKind) !*Node {
     node.* = switch (kind) {
         .Program => Node{ .Program = .{ .statements = std.ArrayList(*Node).init(allocator) } },
         .Block => Node{ .Block = .{ .statements = std.ArrayList(*Node).init(allocator) } },
+        .LiteralList => Node{ .LiteralList = .{ .elements = std.ArrayList(*Node).init(allocator) } },
         else => @panic("Use specific create functions for this node type"),
     };
     return node;

@@ -1,0 +1,14 @@
+# Test list operations
+nums = [1, 2, 3]
+print(nums)
+print(len(nums))
+
+# Access by index
+print(nums[0])
+print(nums[1])
+print(nums[2])
+
+# Append returns new list
+nums = append(nums, 999)
+print(len(nums))
+print(nums[3])

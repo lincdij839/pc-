@@ -90,6 +90,27 @@ pub const Interpreter = struct {
             .LiteralString => |v| Value{ .String = v.value },
             .LiteralBool => |v| Value{ .Bool = v.value },
 
+            .LiteralList => |v| blk: {
+                var list = std.ArrayList(Value).init(self.allocator);
+                for (v.elements.items) |elem| {
+                    try list.append(try self.eval(elem));
+                }
+                break :blk Value{ .List = list };
+            },
+
+            .IndexAccess => |v| blk: {
+                const obj = try self.eval(v.object);
+                const idx = try self.eval(v.index);
+                
+                if (obj == .List and idx == .Int) {
+                    const index = @as(usize, @intCast(idx.Int));
+                    if (index < obj.List.items.len) {
+                        break :blk obj.List.items[index];
+                    }
+                }
+                break :blk Value.None;
+            },
+
             .Identifier => |v| blk: {
                 // Lookup from innermost scope to outermost
                 if (self.scopes.items.len > 0) {
