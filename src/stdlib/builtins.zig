@@ -10,6 +10,7 @@ const crypto = @import("crypto.zig");
 const string_utils = @import("string_utils.zig");
 const web = @import("web.zig");
 const forensics = @import("forensics.zig");
+const reverse = @import("reverse.zig");
 
 // Function signature for all built-in functions
 pub const BuiltinFn = *const fn (*Interpreter, []Value) InterpreterError!Value;
@@ -122,6 +123,20 @@ pub const builtins = std.StaticStringMap(BuiltinFn).initComptime(.{
     .{ "extract_zip", forensics.builtin_extract_zip },
     .{ "extract_lsb", forensics.builtin_extract_lsb },
     .{ "parse_pcap", forensics.builtin_parse_pcap },
+    // Reverse Engineering
+    .{ "parse_elf", reverse.builtin_parse_elf },
+    .{ "elf_symbols", reverse.builtin_elf_symbols },
+    .{ "elf_strings", reverse.builtin_elf_strings },
+    .{ "find_gadgets", reverse.builtin_find_gadgets },
+    .{ "find_syscall", reverse.builtin_find_syscall },
+    .{ "asm", reverse.builtin_asm },
+    .{ "disasm", reverse.builtin_disasm },
+    .{ "checksec", reverse.builtin_checksec },
+    .{ "file_info", reverse.builtin_file_info },
+    .{ "cyclic", reverse.builtin_cyclic },
+    .{ "cyclic_find", reverse.builtin_cyclic_find },
+    .{ "shellcode_nop", reverse.builtin_shellcode_nop },
+    .{ "shellcode_int80", reverse.builtin_shellcode_int80 },
 });
 
 // ============================================================================

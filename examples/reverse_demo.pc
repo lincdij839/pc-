@@ -1,0 +1,128 @@
+# PC Language - Reverse Engineering Demo
+
+print("========================================")
+print("  Reverse Engineering Toolkit")
+print("========================================")
+print("")
+
+# ============================================================================
+# 1. ELF Binary Analysis
+# ============================================================================
+print("[1] ELF Binary Analysis:")
+binary = "/bin/ls"
+
+# Parse ELF header
+print("  Parsing ELF:", binary)
+elf = parse_elf(binary)
+print("  Result:", elf)
+print("")
+
+# Get file info
+info = file_info(binary)
+print("  File info:", info)
+print("")
+
+# Extract strings
+print("[2] String Extraction:")
+strings = elf_strings(binary, 5)
+print("  Found", len(strings), "strings (showing first 5):")
+count = 0
+for s in strings:
+    if count < 5:
+        print("    -", s)
+        count = count + 1
+print("")
+
+# ============================================================================
+# 3. Assembly & Disassembly
+# ============================================================================
+print("[3] Assembly Operations:")
+
+# Assemble instruction
+print("  Assembling 'nop'...")
+nop_bytes = asm("nop", "x64")
+print("  Result (hex):", nop_bytes)
+print("")
+
+# Disassemble bytes
+print("  Disassembling 90h (NOP)...")
+disasm_result = disasm("90", "x64")
+print("  Result:", disasm_result)
+print("")
+
+# ============================================================================
+# 4. Pattern Generation (for BOF)
+# ============================================================================
+print("[4] Buffer Overflow Tools:")
+
+# Generate cyclic pattern
+pattern = cyclic(100)
+print("  Cyclic pattern (100 bytes):", pattern)
+print("")
+
+# Find offset
+test_substr = "aaba"
+offset = cyclic_find(test_substr)
+print("  Offset of 'aaba':", offset)
+print("")
+
+# ============================================================================
+# 5. Shellcode Generation
+# ============================================================================
+print("[5] Shellcode Utilities:")
+
+# NOP sled
+nop_sled = shellcode_nop(10)
+print("  NOP sled (10 bytes):", hex_encode(nop_sled))
+print("")
+
+# int 0x80
+int80 = shellcode_int80()
+print("  int 0x80:", hex_encode(int80))
+print("")
+
+# ============================================================================
+# 6. Pack/Unpack for exploit
+# ============================================================================
+print("[6] Exploit Building:")
+
+# Pack return address
+ret_addr = 0x08048400
+packed = p32(ret_addr)
+print("  Return address:", hex(ret_addr))
+print("  Packed (little endian):", hex_encode(packed))
+print("")
+
+# Build simple payload
+payload_parts = ["A" * 64, packed]
+print("  Payload structure:")
+print("    - Buffer fill: 64 bytes")
+print("    - Return addr: 0x08048400")
+print("")
+
+print("========================================")
+print("  Reverse Engineering Functions:")
+print("========================================")
+print("ELF Analysis:")
+print("  ✓ parse_elf() - Parse ELF headers")
+print("  ✓ elf_symbols() - Extract symbols")
+print("  ✓ elf_strings() - Extract strings")
+print("  ✓ file_info() - Get file type info")
+print("")
+print("ROP & Gadgets:")
+print("  ✓ find_gadgets() - Search ROP gadgets")
+print("  ✓ find_syscall() - Find syscall gadget")
+print("")
+print("Assembly:")
+print("  ✓ asm() - Assemble instructions")
+print("  ✓ disasm() - Disassemble bytes")
+print("")
+print("Exploit Tools:")
+print("  ✓ cyclic() - Generate pattern")
+print("  ✓ cyclic_find() - Find offset")
+print("  ✓ checksec() - Check binary protections")
+print("")
+print("Shellcode:")
+print("  ✓ shellcode_nop() - NOP sled")
+print("  ✓ shellcode_int80() - int 0x80")
+print("  ✓ shellcode_execve() - execve shellcode")
