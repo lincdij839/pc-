@@ -17,15 +17,27 @@ pub const Lexer = struct {
     line: usize,
     column: usize,
     allocator: std.mem.Allocator,
+    indent_stack: std.ArrayList(usize),  // 縮進棧
+    at_line_start: bool,                 // 是否在行首
+    pending_dedents: usize,              // 待處理的 DEDENT 數量
 
     pub fn init(allocator: std.mem.Allocator, source: []const u8) Lexer {
+        var indent_stack = std.ArrayList(usize).init(allocator);
+        indent_stack.append(0) catch {}; // 初始縮進為 0
         return .{
             .source = source,
             .pos = 0,
             .line = 1,
             .column = 1,
             .allocator = allocator,
+            .indent_stack = indent_stack,
+            .at_line_start = true,
+            .pending_dedents = 0,
         };
+    }
+    
+    pub fn deinit(self: *Lexer) void {
+        self.indent_stack.deinit();
     }
 
     fn current(self: *const Lexer) ?u8 {

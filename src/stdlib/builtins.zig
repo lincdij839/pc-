@@ -3,6 +3,10 @@ const std = @import("std");
 const Interpreter = @import("../interpreter.zig").Interpreter;
 const Value = @import("../interpreter.zig").Value;
 const InterpreterError = @import("../interpreter.zig").InterpreterError;
+const process = @import("process.zig");
+const network = @import("network.zig");
+const autoexploit = @import("autoexploit.zig");
+const crypto = @import("crypto.zig");
 
 // Function signature for all built-in functions
 pub const BuiltinFn = *const fn (*Interpreter, []Value) InterpreterError!Value;
@@ -28,6 +32,59 @@ pub const builtins = std.StaticStringMap(BuiltinFn).initComptime(.{
     .{ "append", builtin_append },
     .{ "keys", builtin_keys },
     .{ "values", builtin_values },
+    // Process functions
+    .{ "process", process.builtin_process },
+    .{ "proc_send", process.builtin_proc_send },
+    .{ "proc_sendline", process.builtin_proc_sendline },
+    .{ "proc_recv", process.builtin_proc_recv },
+    .{ "proc_recvline", process.builtin_proc_recvline },
+    .{ "proc_recvuntil", process.builtin_proc_recvuntil },
+    .{ "proc_sendafter", process.builtin_proc_sendafter },
+    .{ "proc_interactive", process.builtin_proc_interactive },
+    // Network functions
+    .{ "remote", network.builtin_remote },
+    .{ "listen", network.builtin_listen },
+    .{ "sock_send", network.builtin_sock_send },
+    .{ "sock_sendline", network.builtin_sock_sendline },
+    .{ "sock_recv", network.builtin_sock_recv },
+    .{ "sock_recvline", network.builtin_sock_recvline },
+    .{ "sock_recvuntil", network.builtin_sock_recvuntil },
+    .{ "sock_sendafter", network.builtin_sock_sendafter },
+    // Auto Exploit functions
+    .{ "AutoExploit", autoexploit.builtin_auto_exploit },
+    .{ "ae_set_binary", autoexploit.builtin_ae_set_binary },
+    .{ "ae_set_libc_base", autoexploit.builtin_ae_set_libc_base },
+    .{ "ae_add_gadget", autoexploit.builtin_ae_add_gadget },
+    .{ "ae_build_payload", autoexploit.builtin_ae_build_payload },
+    .{ "ae_leak_address", autoexploit.builtin_ae_leak_address },
+    .{ "ae_find_libc_base", autoexploit.builtin_ae_find_libc_base },
+    // Crypto functions
+    .{ "md5", crypto.builtin_md5 },
+    .{ "sha1", crypto.builtin_sha1 },
+    .{ "sha256", crypto.builtin_sha256 },
+    .{ "sha512", crypto.builtin_sha512 },
+    .{ "base64_encode", crypto.builtin_base64_encode },
+    .{ "base64_decode", crypto.builtin_base64_decode },
+    .{ "rsa_parse_pem", crypto.builtin_rsa_parse_pem },
+    .{ "rsa_decrypt", crypto.builtin_rsa_decrypt },
+    .{ "rsa_factor_small", crypto.builtin_rsa_factor_small },
+    .{ "rsa_common_e", crypto.builtin_rsa_common_e },
+    .{ "xor_bytes", crypto.builtin_xor_bytes },
+    .{ "rot13", crypto.builtin_rot13 },
+    .{ "hex_encode", crypto.builtin_hex_encode },
+    .{ "hex_decode", crypto.builtin_hex_decode },
+    .{ "rsa_attack_factordb", crypto.builtin_rsa_attack_factordb },
+    .{ "rsa_attack_fermat", crypto.builtin_rsa_attack_fermat },
+    .{ "rsa_attack_wiener", crypto.builtin_rsa_attack_wiener },
+    .{ "rsa_compute_d", crypto.builtin_rsa_compute_d },
+    .{ "rsa_decrypt_with_pqe", crypto.builtin_rsa_decrypt_with_pqe },
+    .{ "aes_encrypt", crypto.builtin_aes_encrypt },
+    .{ "aes_decrypt", crypto.builtin_aes_decrypt },
+    .{ "read_file", crypto.builtin_read_file },
+    .{ "write_file", crypto.builtin_write_file },
+    .{ "shellcode_execve", crypto.builtin_shellcode_execve },
+    .{ "bytes_to_long", crypto.builtin_bytes_to_long },
+    .{ "long_to_bytes", crypto.builtin_long_to_bytes },
 });
 
 // ============================================================================

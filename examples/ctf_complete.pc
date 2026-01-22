@@ -1,0 +1,118 @@
+# PC Language - Complete CTF Toolkit Demo
+
+print("========================================")
+print("   PC Language CTF Toolkit Showcase")
+print("========================================")
+print("")
+
+print("[Category: Cryptography]")
+print("------------------------")
+
+# Hash Functions
+print("1. Hash Functions:")
+data = "admin"
+print("  Input: admin")
+h1 = md5(data)
+print("  MD5    :", h1)
+h2 = sha256(data)
+print("  SHA256 :", h2)
+print("")
+
+# Encoding
+print("2. Base64 Encoding:")
+flag = "CTF{b4se64_t3st}"
+enc = base64_encode(flag)
+print("  Original:", flag)
+print("  Encoded :", enc)
+dec = base64_decode(enc)
+print("  Decoded :", dec)
+print("")
+
+# XOR Cipher
+print("3. XOR Cipher:")
+plain = "FLAG"
+xkey = "KEY"
+cipher = xor_bytes(plain, xkey)
+print("  Plaintext :", plain)
+print("  Key       :", xkey)
+print("  Hex       :", hex_encode(cipher))
+recovered = xor_bytes(cipher, xkey)
+print("  Recovered :", recovered)
+print("")
+
+# ROT13
+print("4. ROT13 Caesar:")
+msg = "PGS{ebg13}"
+print("  Cipher    :", msg)
+clear = rot13(msg)
+print("  Plaintext :", clear)
+print("")
+
+print("[Category: Binary Exploitation]")
+print("--------------------------------")
+
+# Pack/Unpack
+print("5. Binary Packing:")
+addr = 0xdeadbeef
+print("  Address:", hex(addr))
+p = p32(addr)
+print("  p32    :", hex_encode(p))
+u = unpack32(p)
+print("  Unpack :", hex(u))
+print("")
+
+# 64-bit
+print("6. 64-bit Packing:")
+addr64 = 0x7fffffff1234
+print("  Address:", hex(addr64))
+p64val = p64(addr64)
+print("  p64    :", hex_encode(p64val))
+u64 = unpack64(p64val)
+print("  Unpack :", hex(u64))
+print("")
+
+print("[Category: Web Security]")
+print("------------------------")
+
+# File Operations
+print("7. File I/O:")
+secret = "CTF{f1l3_fl4g}"
+result = write_file("/tmp/flag.txt", secret)
+print("  Written:", result)
+content = read_file("/tmp/flag.txt")
+print("  Read   :", content)
+print("")
+
+print("[Category: Crypto Attacks]")
+print("--------------------------")
+
+# RSA Weak Key
+print("8. RSA Factorization:")
+n = 143
+print("  n =", n)
+factors = rsa_factor_small(n)
+print("  Result:", factors)
+print("")
+
+# Hex encoding
+print("9. Hex Operations:")
+raw = "test"
+hexed = hex_encode(raw)
+print("  Raw:", raw)
+print("  Hex:", hexed)
+unhex = hex_decode(hexed)
+print("  Decode:", unhex)
+print("")
+
+print("========================================")
+print("  Toolkit includes:")
+print("  - Hash: md5, sha1, sha256, sha512")
+print("  - Encode: base64, hex, rot13")
+print("  - Cipher: xor_bytes, AES")
+print("  - Binary: p32/64, unpack32/64")
+print("  - RSA: parse_pem, factor, attack_*")
+print("  - File: read_file, write_file")
+print("  - Utils: bytes_to_long, long_to_bytes")
+print("========================================")
+print("")
+print("Ready for CTF competitions!")

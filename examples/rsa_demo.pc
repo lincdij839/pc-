@@ -1,0 +1,47 @@
+# RSA Cryptography Demo for pc language
+
+print("=== PC Language RSA Crypto Demo ===")
+print("")
+
+# Demo 1: Hash functions
+print("[1] Hash Functions")
+msg = "CTF{flag_here}"
+print("Message: CTF{flag_here}")
+h1 = md5(msg)
+print("MD5:")
+print(h1)
+h2 = sha256(msg)
+print("SHA256:")
+print(h2)
+print("")
+
+# Demo 2: Encoding
+print("[2] Base64 Encoding")
+data = "secret_data"
+enc = base64_encode(data)
+print("Original: secret_data")
+print("Encoded:")
+print(enc)
+dec = base64_decode(enc)
+print("Decoded:")
+print(dec)
+print("")
+
+# Demo 3: Small RSA factorization
+print("[3] RSA Factorization (small n)")
+n = 143
+print("n = 143")
+result = rsa_factor_small(n)
+print("Factorization result:")
+print(result)
+print("")
+
+print("=== Demo Complete ===")
+print("")
+print("Available RSA attack functions:")
+print("- rsa_parse_pem(pem_string)")
+print("- rsa_attack_fermat(n_hex)")
+print("- rsa_attack_wiener(n_hex, e_hex)")
+print("- rsa_attack_factordb(n_hex)")
+print("- rsa_compute_d(p, q, e)")
+print("- rsa_decrypt_with_pqe(c, p, q, e)")

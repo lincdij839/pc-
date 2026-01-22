@@ -16,6 +16,8 @@ pub const Value = union(enum) {
         params: std.ArrayList(*Node),
         body: *Node,
     },
+    Process: *anyopaque,  // Process handle (opaque pointer)
+    Socket: *anyopaque,   // Network socket (opaque pointer)
 
     pub fn format(
         self: Value,
@@ -34,6 +36,8 @@ pub const Value = union(enum) {
             .List => try writer.print("<list>", .{}),
             .Dict => try writer.print("<dict>", .{}),
             .Function => try writer.print("<function>", .{}),
+            .Process => try writer.print("<process>", .{}),
+            .Socket => try writer.print("<socket>", .{}),
         }
     }
 };

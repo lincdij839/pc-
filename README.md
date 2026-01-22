@@ -12,6 +12,7 @@
 - **⚡ C/C++ 級性能** - 接近原生性能，支持手動內存管理
 - **🔗 FFI 支持** - 直接調用 C/C++ 函數
 - **🛠️ 內建黑客工具** - PWN 模組（pack/unpack、process 等）
+- **🔐 密碼學工具鏈** - Hash、RSA攻擊、編碼等 CTF 必備功能
 - **📦 單文件編譯** - 編譯成獨立可執行文件
 - **⚙️ HolyC 風格執行** - 直接運行，無需子命令
 
@@ -104,6 +105,49 @@ unpacked = unpack64(packed)
 print(hex(unpacked))  # 0x401234
 ```
 
+### 密碼學模組
+```python
+# Hash 函數
+data = "password123"
+print(md5(data))     # MD5 雜湊
+print(sha256(data))  # SHA256 雜湊
+
+# Base64 編碼
+encoded = base64_encode("secret")
+decoded = base64_decode(encoded)
+print(decoded)  # "secret"
+
+# XOR 加密
+plaintext = "flag"
+key = "key"
+encrypted = xor_bytes(plaintext, key)
+decrypted = xor_bytes(encrypted, key)
+print(decrypted)  # "flag"
+
+# RSA 小數分解
+n = 143  # 13 * 11
+result = rsa_factor_small(n)
+print(result)  # {"p": 11, "q": 13, "factored": true}
+
+# AES 加密（需要 pycryptodome）
+plaintext = "sensitive_data"
+key = "0123456789abcdef"  # 16 bytes
+iv = "fedcba9876543210"   # 16 bytes
+encrypted = aes_encrypt(plaintext, key, iv)
+decrypted = aes_decrypt(encrypted, key, iv)
+print(decrypted)  # "sensitive_data"
+
+# 文件操作
+data = read_file("/tmp/flag.txt")
+write_file("/tmp/output.txt", data)
+
+# 大整數轉換（CTF 常用）
+bytes_data = "flag"
+n = bytes_to_long(bytes_data)
+recovered = long_to_bytes(n)
+print(recovered)  # "flag"
+```
+
 ## 📚 標準庫
 
 ### 基礎函數
@@ -139,6 +183,47 @@ print(hex(unpacked))  # 0x401234
 - `unpack64(bytes)` - 解包 64 位整數
 - `hex(value)` - 轉換為十六進制字串
 
+### 密碼學模組
+
+#### Hash 函數
+- `md5(data)` - MD5 雜湊
+- `sha1(data)` - SHA1 雜湊
+- `sha256(data)` - SHA256 雜湊
+- `sha512(data)` - SHA512 雜湊
+
+#### 編碼函數
+- `base64_encode(data)` - Base64 編碼
+- `base64_decode(data)` - Base64 解碼
+- `hex_encode(data)` - 十六進制編碼
+- `hex_decode(hex_string)` - 十六進制解碼
+
+#### 加密函數
+- `xor_bytes(data, key)` - XOR 加密/解密
+- `rot13(text)` - ROT13 密碼
+
+#### RSA 攻擊函數
+- `rsa_parse_pem(pem_string)` - 解析 PEM 格式公鑰
+- `rsa_factor_small(n)` - 小數試除法分解
+- `rsa_attack_fermat(n_hex)` - Fermat 分解攻擊
+- `rsa_attack_wiener(n_hex, e_hex)` - Wiener 攻擊（小私鑰）
+- `rsa_attack_factordb(n_hex)` - FactorDB 查詢分解
+- `rsa_compute_d(p, q, e)` - 計算私鑰 d
+- `rsa_decrypt_with_pqe(c, p, q, e)` - RSA 解密
+- `rsa_common_e()` - 返回常見 RSA 指數列表
+
+#### AES 加密（需要 pycryptodome）
+- `aes_encrypt(plaintext, key, iv)` - AES-128-CBC 加密
+- `aes_decrypt(ciphertext, key, iv)` - AES-128-CBC 解密
+
+#### 文件操作
+- `read_file(path)` - 讀取文件（二進制）
+- `write_file(path, data)` - 寫入文件（二進制）
+
+#### CTF 工具函數
+- `bytes_to_long(bytes)` - 字節轉大整數（大端序）
+- `long_to_bytes(n)` - 大整數轉字節（大端序）
+- `shellcode_execve(cmd)` - 生成 shellcode（需要 pwntools）
+
 ### 數字字面量
 - `0x...` - 十六進制（例：0x401234）
 - `0o...` - 八進制（例：0o755）
@@ -153,10 +238,12 @@ print(hex(unpacked))  # 0x401234
 | 解釋器 | 98% | ✅ 完成 |
 | 標準庫 | 95% | ✅ 完成 |
 | PWN 模組 | 90% | ✅ 完成 |
+| 密碼學模組 | 98% | ✅ 完成 |
+| 文件操作 | 100% | ✅ 完成 |
 | 數據結構 | 95% | ✅ 列表/字典完成 |
 | LLVM 後端 | 0% | 🚧 計劃中 |
 
-**總體完成度：95.2%**
+**總體完成度：96.3%**
 
 ## 🛠️ 技術架構
 
@@ -188,6 +275,11 @@ print(hex(unpacked))  # 0x401234
 ### PWN 模組
 - `test_pack_simple.pc` - Pack/Unpack 演示
 - `test_pwn.pc` - PWN 功能綜合演示
+
+### 密碼學模組
+- `test_rsa_attack.pc` - RSA 攻擊演示
+- `rsa_demo.pc` - 密碼學功能演示
+- `ctf_toolkit.pc` - CTF 綜合工具包演示
 
 ## 🧪 測試
 
@@ -231,6 +323,10 @@ print(hex(unpacked))  # 0x401234
 - [x] 字典/列表索引賦值（dict[key] = value）
 - [x] 十六進制/八進制/二進制字面量
 - [x] 字符串拼接
+- [x] 密碼學工具鏈（Hash、RSA、編碼）
+- [x] AES 加密/解密（CBC 模式）
+- [x] 文件讀寫操作（二進制）
+- [x] CTF 常用工具函數（bytes_to_long 等）
 
 ## 📄 許可證
 

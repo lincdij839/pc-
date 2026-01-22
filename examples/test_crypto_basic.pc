@@ -1,0 +1,11 @@
+# Basic crypto test
+print("Testing crypto")
+
+# Test MD5
+result = md5("hello")
+print(result)
+
+# Test small factorization
+n = 143
+fact = rsa_factor_small(n)
+print(fact)
