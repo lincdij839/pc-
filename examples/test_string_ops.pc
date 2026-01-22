@@ -1,0 +1,107 @@
+# Test String Comparison and Operations
+
+print("=== String Comparison Test ===")
+print("")
+
+# Test 1: String equality
+print("[1] String Equality:")
+password = "admin123"
+hash_result = md5(password)
+target = "0192023a7bbd73250516f069df18b500"
+print("Password hash:", hash_result)
+print("Target hash  :", target)
+
+if hash_result == target:
+    print("MATCH! Hashes are equal")
+else:
+    print("No match")
+
+print("")
+
+# Test 2: String inequality
+print("[2] String Inequality:")
+str1 = "hello"
+str2 = "world"
+if str1 != str2:
+    print("Strings are different:", str1, "!=", str2)
+
+print("")
+
+# Test 3: split function
+print("[3] Split Function:")
+text = "CTF{flag_is_here}"
+parts = split(text, "_")
+print("Original:", text)
+print("Split by '_':", parts)
+
+print("")
+
+# Test 4: join function
+print("[4] Join Function:")
+words = ["hello", "world", "ctf"]
+joined = join(words, "-")
+print("List:", words)
+print("Joined:", joined)
+
+print("")
+
+# Test 5: replace function
+print("[5] Replace Function:")
+msg = "hello world world"
+replaced = replace(msg, "world", "CTF")
+print("Original :", msg)
+print("Replaced :", replaced)
+
+print("")
+
+# Test 6: strip function
+print("[6] Strip Function:")
+messy = "  flag  "
+clean = strip(messy)
+print("Messy  : '", messy, "'")
+print("Clean  : '", clean, "'")
+
+print("")
+
+# Test 7: startswith/endswith
+print("[7] Prefix/Suffix Check:")
+flag = "CTF{test_flag}"
+if startswith(flag, "CTF{"):
+    print("Flag starts with CTF{")
+if endswith(flag, "}"):
+    print("Flag ends with }")
+
+print("")
+
+# Test 8: find function
+print("[8] Find Substring:")
+data = "The flag is hidden here"
+pos = find(data, "flag")
+print("Text:", data)
+print("Position of 'flag':", pos)
+
+print("")
+
+# Test 9: chr/ord functions
+print("[9] Character Conversions:")
+code = 65
+char = chr(code)
+back = ord(char)
+print("ASCII 65 ->", char)
+print("Char 'A' ->", back)
+
+print("")
+
+# Test 10: bin/oct/hex conversions
+print("[10] Number Base Conversions:")
+n = 42
+print("Decimal:", n)
+print("Binary :", bin(n))
+print("Octal  :", oct(n))
+print("Hex    :", hex(n))
+hex_str = "0x2a"
+back_to_dec = unhex(hex_str)
+print("unhex('0x2a') =", back_to_dec)
+
+print("")
+print("=== All String Tests Passed! ===")

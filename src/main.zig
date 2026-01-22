@@ -5,6 +5,7 @@ const Parser = @import("parser.zig").Parser;
 const Interpreter = @import("interpreter.zig").Interpreter;
 const Codegen = @import("codegen.zig").Codegen;
 const Token = @import("token.zig").Token;
+const ast = @import("ast.zig");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};  
@@ -107,8 +108,8 @@ fn parseFile(allocator: std.mem.Allocator, filename: []const u8) !void {
 
     // Parse
     var parser = Parser.init(allocator, tokens.items);
-    const ast = try parser.parseProgram();
-    _ = ast;
+    const prog_ast = try parser.parseProgram();
+    defer ast.freeNode(allocator, prog_ast);
 
     try stdout.print("Parsing complete!\n", .{});
 }
@@ -129,6 +130,7 @@ fn runFile(allocator: std.mem.Allocator, filename: []const u8) !void {
     // Parse
     var parser = Parser.init(allocator, tokens.items);
     const prog_ast = try parser.parseProgram();
+    defer ast.freeNode(allocator, prog_ast);
 
     // Execute (HolyC style - no extra output)
     var interp = Interpreter.init(allocator);
@@ -156,6 +158,7 @@ fn compileFile(allocator: std.mem.Allocator, filename: []const u8) !void {
     // Parse
     var parser = Parser.init(allocator, tokens.items);
     const prog_ast = try parser.parseProgram();
+    defer ast.freeNode(allocator, prog_ast);
 
     // Generate LLVM IR
     var codegen = try Codegen.init(allocator, "main");

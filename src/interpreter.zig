@@ -332,10 +332,18 @@ pub const Interpreter = struct {
             if (std.mem.eql(u8, operator, ">=")) return Value{ .Bool = l >= r };
         }
 
-        // String concatenation
-        if (left_val == .String and right_val == .String and std.mem.eql(u8, operator, "+")) {
-            const concat_result = try std.fmt.allocPrint(self.allocator, "{s}{s}", .{ left_val.String, right_val.String });
-            return Value{ .String = concat_result };
+        // String operations
+        if (left_val == .String and right_val == .String) {
+            if (std.mem.eql(u8, operator, "+")) {
+                const concat_result = try std.fmt.allocPrint(self.allocator, "{s}{s}", .{ left_val.String, right_val.String });
+                return Value{ .String = concat_result };
+            }
+            if (std.mem.eql(u8, operator, "==")) {
+                return Value{ .Bool = std.mem.eql(u8, left_val.String, right_val.String) };
+            }
+            if (std.mem.eql(u8, operator, "!=")) {
+                return Value{ .Bool = !std.mem.eql(u8, left_val.String, right_val.String) };
+            }
         }
 
         std.debug.print("Type error in binary operation: {s} {s} {s}\n", .{@tagName(left_val), operator, @tagName(right_val)});

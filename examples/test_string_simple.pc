@@ -1,0 +1,66 @@
+# Simple String Test
+
+print("=== String Comparison Test ===")
+print("")
+
+# Test 1: String equality
+print("[1] String Equality:")
+str1 = "hello"
+str2 = "hello"
+str3 = "world"
+
+if str1 == str2:
+    print("SUCCESS: str1 equals str2")
+else:
+    print("FAIL: str1 should equal str2")
+
+if str1 != str3:
+    print("SUCCESS: str1 not equal str3")
+else:
+    print("FAIL: str1 should not equal str3")
+
+print("")
+
+# Test 2: split function
+print("[2] Split Function:")
+text = "hello_world_ctf"
+parts = split(text, "_")
+print("Original:", text)
+print("Split result:", parts)
+
+print("")
+
+# Test 3: join function
+print("[3] Join Function:")
+words = ["hello", "world"]
+joined = join(words, " ")
+print("Joined:", joined)
+
+print("")
+
+# Test 4: replace
+print("[4] Replace Function:")
+msg = "hello world"
+result = replace(msg, "world", "CTF")
+print("Result:", result)
+
+print("")
+
+# Test 5: chr and ord
+print("[5] chr/ord:")
+c = chr(65)
+print("chr(65):", c)
+n = ord("A")
+print("ord(A):", n)
+
+print("")
+
+# Test 6: bin/oct conversions
+print("[6] Number Conversions:")
+num = 10
+print("bin(10):", bin(num))
+print("oct(10):", oct(num))
+print("hex(10):", hex(num))
+
+print("")
+print("=== Tests Complete ===")

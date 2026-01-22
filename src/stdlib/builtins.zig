@@ -7,6 +7,7 @@ const process = @import("process.zig");
 const network = @import("network.zig");
 const autoexploit = @import("autoexploit.zig");
 const crypto = @import("crypto.zig");
+const string_utils = @import("string_utils.zig");
 
 // Function signature for all built-in functions
 pub const BuiltinFn = *const fn (*Interpreter, []Value) InterpreterError!Value;
@@ -85,6 +86,19 @@ pub const builtins = std.StaticStringMap(BuiltinFn).initComptime(.{
     .{ "shellcode_execve", crypto.builtin_shellcode_execve },
     .{ "bytes_to_long", crypto.builtin_bytes_to_long },
     .{ "long_to_bytes", crypto.builtin_long_to_bytes },
+    // String utilities
+    .{ "split", string_utils.builtin_split },
+    .{ "join", string_utils.builtin_join },
+    .{ "replace", string_utils.builtin_replace },
+    .{ "strip", string_utils.builtin_strip },
+    .{ "startswith", string_utils.builtin_startswith },
+    .{ "endswith", string_utils.builtin_endswith },
+    .{ "find", string_utils.builtin_find },
+    .{ "chr", string_utils.builtin_chr },
+    .{ "ord", string_utils.builtin_ord },
+    .{ "bin", string_utils.builtin_bin },
+    .{ "oct", string_utils.builtin_oct },
+    .{ "unhex", string_utils.builtin_unhex },
 });
 
 // ============================================================================

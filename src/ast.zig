@@ -155,3 +155,103 @@ pub fn createFunctionCall(allocator: std.mem.Allocator, callee: *Node) !*Node {
     } };
     return node;
 }
+
+// Free AST node recursively
+pub fn freeNode(allocator: std.mem.Allocator, node: *Node) void {
+    switch (node.*) {
+        .Program => |v| {
+            for (v.statements.items) |stmt| {
+                freeNode(allocator, stmt);
+            }
+            v.statements.deinit();
+        },
+        .FunctionDef => |v| {
+            for (v.params.items) |param| {
+                freeNode(allocator, param);
+            }
+            v.params.deinit();
+            if (v.return_type) |rt| freeNode(allocator, rt);
+            freeNode(allocator, v.body);
+        },
+        .ClassDef => |v| {
+            for (v.methods.items) |method| {
+                freeNode(allocator, method);
+            }
+            v.methods.deinit();
+        },
+        .StructDef => |v| {
+            for (v.fields.items) |field| {
+                freeNode(allocator, field);
+            }
+            v.fields.deinit();
+        },
+        .VariableDecl => |v| {
+            if (v.type_annotation) |ta| freeNode(allocator, ta);
+            if (v.initializer) |init| freeNode(allocator, init);
+        },
+        .Assignment => |v| {
+            freeNode(allocator, v.target);
+            freeNode(allocator, v.value);
+        },
+        .IfStatement => |v| {
+            freeNode(allocator, v.condition);
+            freeNode(allocator, v.then_branch);
+            if (v.else_branch) |eb| freeNode(allocator, eb);
+        },
+        .WhileLoop => |v| {
+            freeNode(allocator, v.condition);
+            freeNode(allocator, v.body);
+        },
+        .ForLoop => |v| {
+            freeNode(allocator, v.iterator);
+            freeNode(allocator, v.iterable);
+            freeNode(allocator, v.body);
+        },
+        .ReturnStatement => |v| {
+            if (v.value) |val| freeNode(allocator, val);
+        },
+        .BinaryOp => |v| {
+            freeNode(allocator, v.left);
+            freeNode(allocator, v.right);
+        },
+        .UnaryOp => |v| {
+            freeNode(allocator, v.operand);
+        },
+        .FunctionCall => |v| {
+            freeNode(allocator, v.callee);
+            for (v.arguments.items) |arg| {
+                freeNode(allocator, arg);
+            }
+            v.arguments.deinit();
+        },
+        .LiteralList => |v| {
+            for (v.elements.items) |elem| {
+                freeNode(allocator, elem);
+            }
+            v.elements.deinit();
+        },
+        .LiteralDict => |v| {
+            for (v.keys.items) |key| {
+                freeNode(allocator, key);
+            }
+            for (v.values.items) |val| {
+                freeNode(allocator, val);
+            }
+            v.keys.deinit();
+            v.values.deinit();
+        },
+        .IndexAccess => |v| {
+            freeNode(allocator, v.object);
+            freeNode(allocator, v.index);
+        },
+        .Block => |v| {
+            for (v.statements.items) |stmt| {
+                freeNode(allocator, stmt);
+            }
+            v.statements.deinit();
+        },
+        // Leaf nodes - no children to free
+        .Identifier, .LiteralInt, .LiteralFloat, .LiteralString, .LiteralBool => {},
+    }
+    allocator.destroy(node);
+}
