@@ -72,14 +72,13 @@ print(total_padding)
 # ==== 5. Gadget 數據庫 ====
 print("--- Gadget Database ---")
 
-# 使用字面量創建 gadget 映射
-gadgets = {
-    "pop_rdi": pop_rdi,
-    "pop_rsi": pop_rsi,
-    "ret": ret,
-    "system": system,
-    "binsh": binsh
-}
+# 使用動態賦值創建 gadget 映射
+gadgets = {}
+gadgets["pop_rdi"] = pop_rdi
+gadgets["pop_rsi"] = pop_rsi
+gadgets["ret"] = ret
+gadgets["system"] = system
+gadgets["binsh"] = binsh
 
 print("Gadgets registered:")
 print(len(gadgets))

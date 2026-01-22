@@ -163,12 +163,41 @@ pub const Interpreter = struct {
 
             .Assignment => |v| blk: {
                 const value = try self.eval(v.value);
+                
                 if (v.target.* == .Identifier) {
-                    // Update in innermost scope, or create in current scope/globals
+                    // Normal variable assignment
                     if (self.scopes.items.len > 0) {
                         try self.scopes.items[self.scopes.items.len - 1].put(v.target.Identifier.name, value);
                     } else {
                         try self.globals.put(v.target.Identifier.name, value);
+                    }
+                } else if (v.target.* == .IndexAccess) {
+                    // Index assignment: list[0] = value or dict["key"] = value
+                    const index_access = v.target.IndexAccess;
+                    const idx = try self.eval(index_access.index);
+                    
+                    // Get the actual object pointer from variable
+                    if (index_access.object.* == .Identifier) {
+                        const var_name = index_access.object.Identifier.name;
+                        
+                        // Try to get from globals (use getPtr to modify in place)
+                        if (self.globals.getPtr(var_name)) |target_ptr| {
+                            if (target_ptr.* == .List and idx == .Int) {
+                                // List assignment
+                                const index = @as(usize, @intCast(idx.Int));
+                                if (index < target_ptr.List.items.len) {
+                                    target_ptr.List.items[index] = value;
+                                }
+                            } else if (target_ptr.* == .Dict) {
+                                // Dict assignment
+                                const key_str = switch (idx) {
+                                    .String => |s| s,
+                                    .Int => |i| try std.fmt.allocPrint(self.allocator, "{}", .{i}),
+                                    else => "unknown",
+                                };
+                                try target_ptr.Dict.put(key_str, value);
+                            }
+                        }
                     }
                 }
                 break :blk value;

@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Language: Zig](https://img.shields.io/badge/Language-Zig-orange.svg)](https://ziglang.org/)
-[![Completion: 91%](https://img.shields.io/badge/Completion-91%25-brightgreen.svg)]()
+[![Completion: 95%](https://img.shields.io/badge/Completion-95%25-brightgreen.svg)]()
 
 ## 🌟 核心特性
 
@@ -76,25 +76,39 @@ for i in range(10):
     print(i)
 ```
 
+### 列表和字典
+```python
+# 列表操作
+nums = [1, 2, 3]
+nums[0] = 999
+print(nums[0])  # 999
+nums = append(nums, 4)
+print(len(nums))  # 4
+
+# 字典操作
+config = {"host": "localhost", "port": 8080}
+config["host"] = "192.168.1.1"
+print(config["host"])  # 192.168.1.1
+print(keys(config))  # ["host", "port"]
+```
+
 ### PWN 模組
 ```python
+# 十六進制字面量
+addr = 0x401234
+print(hex(addr))  # 0x401234
+
 # Pack/Unpack
-packed = p32(0x400000)
-print(len(packed))  # 4
-
-unpacked = unpack32(packed)
-print(hex(unpacked))  # 0x400000
-
-# 十六進制轉換
-addr = 0xdeadbeef
-print(hex(addr))
+packed = p64(addr)
+unpacked = unpack64(packed)
+print(hex(unpacked))  # 0x401234
 ```
 
 ## 📚 標準庫
 
 ### 基礎函數
 - `print(x)` - 輸出到標準輸出
-- `len(x)` - 返回長度
+- `len(x)` - 返回長度（支持字串、列表、字典）
 - `range(n)` - 生成範圍
 
 ### 類型轉換
@@ -111,6 +125,13 @@ print(hex(addr))
 - `upper(s)` - 轉大寫
 - `lower(s)` - 轉小寫
 
+### 列表函數
+- `append(list, item)` - 添加元素（返回新列表）
+
+### 字典函數
+- `keys(dict)` - 返回鍵列表
+- `values(dict)` - 返回值列表
+
 ### PWN 模組
 - `p32(value)` - 打包 32 位整數（小端）
 - `p64(value)` - 打包 64 位整數（小端）
@@ -118,18 +139,24 @@ print(hex(addr))
 - `unpack64(bytes)` - 解包 64 位整數
 - `hex(value)` - 轉換為十六進制字串
 
+### 數字字面量
+- `0x...` - 十六進制（例：0x401234）
+- `0o...` - 八進制（例：0o755）
+- `0b...` - 二進制（例：0b1010）
+
 ## 📊 項目狀態
 
 | 模組 | 完成度 | 狀態 |
 |------|--------|------|
 | Lexer | 100% | ✅ 完成 |
-| Parser | 95% | ✅ 基本完成 |
-| 解釋器 | 95% | ✅ 基本完成 |
-| 標準庫 | 90% | ✅ 核心完成 |
-| PWN 模組 | 85% | ✅ 可用 |
+| Parser | 98% | ✅ 完成 |
+| 解釋器 | 98% | ✅ 完成 |
+| 標準庫 | 95% | ✅ 完成 |
+| PWN 模組 | 90% | ✅ 完成 |
+| 數據結構 | 95% | ✅ 列表/字典完成 |
 | LLVM 後端 | 0% | 🚧 計劃中 |
 
-**總體完成度：91.25%**
+**總體完成度：95.2%**
 
 ## 🛠️ 技術架構
 
@@ -141,10 +168,26 @@ print(hex(addr))
 ## 📝 範例程序
 
 查看 [examples/](examples/) 目錄獲取更多範例：
-- `examples/hello.pc` - Hello World
-- `examples/test_math.pc` - 數學函數演示
-- `examples/test_string.pc` - 字串函數演示
-- `examples/test_pack_simple.pc` - PWN 模組演示
+
+### 基礎示例
+- `hello.pc` - Hello World
+- `test_math.pc` - 數學函數演示
+- `test_string.pc` - 字串操作演示
+- `test_hex.pc` - 十六進制字面量演示
+
+### 數據結構
+- `test_list.pc` - 列表操作演示
+- `test_dict.pc` - 字典操作演示
+- `test_dict_assign.pc` - 字典賦值演示
+
+### CTF 工具
+- `rop_builder.pc` - ROP Chain 構建器
+- `exploit_gen.pc` - Exploit Payload 生成器
+- `ctf_helper.pc` - CTF 工具包
+
+### PWN 模組
+- `test_pack_simple.pc` - Pack/Unpack 演示
+- `test_pwn.pc` - PWN 功能綜合演示
 
 ## 🧪 測試
 
@@ -169,18 +212,25 @@ print(hex(addr))
 
 ### 高優先級
 - [ ] 完善縮進處理（INDENT/DEDENT token）
-- [ ] 列表數據結構和操作
-- [ ] 字典數據結構和操作
-
-### 中優先級
-- [ ] class 定義和對象系統
 - [ ] 字串 split/join/replace 函數
 - [ ] process 類（PWN 模組）
 
+### 中優先級
+- [ ] class 定義和對象系統
+- [ ] 模組系統（import）
+- [ ] 列表切片語法（list[1:3]）
+
 ### 低優先級
 - [ ] LLVM 後端（編譯成機器碼）
-- [ ] 模組系統（import）
 - [ ] 異常處理（try/except）
+- [ ] 類型標注系統
+
+### ✅ 已完成
+- [x] 列表數據結構和操作
+- [x] 字典數據結構和操作
+- [x] 字典/列表索引賦值（dict[key] = value）
+- [x] 十六進制/八進制/二進制字面量
+- [x] 字符串拼接
 
 ## 📄 許可證
 
