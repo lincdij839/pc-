@@ -1,5 +1,0 @@
-# Test math functions
-print(abs(5))
-print(max(100, 200))
-print(min(50, 30))
-print(888)

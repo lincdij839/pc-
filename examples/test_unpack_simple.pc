@@ -1,8 +1,0 @@
-# Test unpack only
-packed = p32(305419896)
-print(len(packed))
-
-result = unpack32(packed)
-print(result)
-
-print(999)
