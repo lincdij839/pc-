@@ -87,7 +87,67 @@ pub const Lexer = struct {
         const start = self.pos;
         var is_float = false;
 
-        // Scan digits
+        // Check for hexadecimal (0x), octal (0o), binary (0b)
+        if (self.current() == '0' and self.peek(1) != null) {
+            const next = self.peek(1).?;
+            if (next == 'x' or next == 'X') {
+                // Hexadecimal
+                self.advance(); // skip '0'
+                self.advance(); // skip 'x'
+                while (self.current()) |c| {
+                    if (std.ascii.isHex(c) or c == '_') {
+                        self.advance();
+                    } else {
+                        break;
+                    }
+                }
+                const lexeme = self.source[start..self.pos];
+                return Token{
+                    .kind = .Integer,
+                    .lexeme = lexeme,
+                    .line = start_line,
+                    .column = start_col,
+                };
+            } else if (next == 'o' or next == 'O') {
+                // Octal
+                self.advance(); // skip '0'
+                self.advance(); // skip 'o'
+                while (self.current()) |c| {
+                    if (c >= '0' and c <= '7' or c == '_') {
+                        self.advance();
+                    } else {
+                        break;
+                    }
+                }
+                const lexeme = self.source[start..self.pos];
+                return Token{
+                    .kind = .Integer,
+                    .lexeme = lexeme,
+                    .line = start_line,
+                    .column = start_col,
+                };
+            } else if (next == 'b' or next == 'B') {
+                // Binary
+                self.advance(); // skip '0'
+                self.advance(); // skip 'b'
+                while (self.current()) |c| {
+                    if (c == '0' or c == '1' or c == '_') {
+                        self.advance();
+                    } else {
+                        break;
+                    }
+                }
+                const lexeme = self.source[start..self.pos];
+                return Token{
+                    .kind = .Integer,
+                    .lexeme = lexeme,
+                    .line = start_line,
+                    .column = start_col,
+                };
+            }
+        }
+
+        // Scan decimal digits
         while (self.current()) |c| {
             if (std.ascii.isDigit(c) or c == '_') {
                 self.advance();

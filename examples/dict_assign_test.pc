@@ -1,0 +1,20 @@
+print("Testing dict assignment...")
+
+# 創建字典
+d = {}
+print("Created empty dict")
+print(len(d))
+
+# 嘗試賦值（這個語法可能不支持）
+# d["key"] = 123
+
+# 使用字面量創建
+d2 = {"name": "test", "value": 42}
+print("Created dict with literals")
+print(len(d2))
+
+k = keys(d2)
+print("Keys:")
+print(len(k))
+
+print("Done")
