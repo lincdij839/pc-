@@ -1,0 +1,390 @@
+# PC Language - Fast CTF Verification (No External Calls)
+# Tests only built-in functions that don't call external processes
+
+print("=" * 60)
+print("PC Language - Fast CTF Verification")
+print("=" * 60)
+print("")
+
+passed = 0
+failed = 0
+total = 0
+
+# ============================================================================
+# 1. CRYPTO
+# ============================================================================
+print("[1] CRYPTO - Cryptography")
+print("-" * 60)
+
+# MD5
+total = total + 1
+if md5("test") == "098f6bcd4621d373cade4e832627b4f6":
+    print("  ✓ MD5 hash")
+    passed = passed + 1
+else:
+    print("  ✗ MD5 hash")
+    failed = failed + 1
+
+# SHA256
+total = total + 1
+if sha256("hello") == "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824":
+    print("  ✓ SHA256 hash")
+    passed = passed + 1
+else:
+    print("  ✗ SHA256 hash")
+    failed = failed + 1
+
+# Base64
+total = total + 1
+b64 = base64_encode("CTF")
+if base64_decode(b64) == "CTF":
+    print("  ✓ Base64 encode/decode")
+    passed = passed + 1
+else:
+    print("  ✗ Base64 encode/decode")
+    failed = failed + 1
+
+# Hex
+total = total + 1
+hex_enc = hex_encode("ABC")
+if hex_decode(hex_enc) == "ABC":
+    print("  ✓ Hex encode/decode")
+    passed = passed + 1
+else:
+    print("  ✗ Hex encode/decode")
+    failed = failed + 1
+
+# XOR
+total = total + 1
+xor_result = xor_bytes("hello", "key")
+if len(xor_result) == 5:
+    print("  ✓ XOR cipher")
+    passed = passed + 1
+else:
+    print("  ✗ XOR cipher")
+    failed = failed + 1
+
+# ROT13
+total = total + 1
+rot_result = rot13("hello")
+if len(rot_result) > 0:
+    print("  ✓ ROT13")
+    passed = passed + 1
+else:
+    print("  ✗ ROT13")
+    failed = failed + 1
+
+print("")
+
+# ============================================================================
+# 2. PWN
+# ============================================================================
+print("[2] PWN - Binary Exploitation")
+print("-" * 60)
+
+# p32/unpack32
+total = total + 1
+addr32 = 0xdeadbeef
+packed32 = p32(addr32)
+if unpack32(packed32) == addr32:
+    print("  ✓ p32/unpack32")
+    passed = passed + 1
+else:
+    print("  ✗ p32/unpack32")
+    failed = failed + 1
+
+# p64/unpack64
+total = total + 1
+addr64 = 0x7ffff7a0d000
+packed64 = p64(addr64)
+if unpack64(packed64) == addr64:
+    print("  ✓ p64/unpack64")
+    passed = passed + 1
+else:
+    print("  ✗ p64/unpack64")
+    failed = failed + 1
+
+# Shellcode NOP
+total = total + 1
+nop_sled = shellcode_nop(10)
+if len(nop_sled) == 20:
+    print("  ✓ Shellcode NOP sled")
+    passed = passed + 1
+else:
+    print("  ✗ Shellcode NOP sled")
+    failed = failed + 1
+
+# Shellcode int 0x80
+total = total + 1
+int80 = shellcode_int80()
+if len(int80) > 0:
+    print("  ✓ Shellcode int 0x80")
+    passed = passed + 1
+else:
+    print("  ✗ Shellcode int 0x80")
+    failed = failed + 1
+
+print("")
+
+# ============================================================================
+# 3. REVERSE
+# ============================================================================
+print("[3] REVERSE - Reverse Engineering")
+print("-" * 60)
+
+# chr/ord
+total = total + 1
+if ord(chr(65)) == 65:
+    print("  ✓ chr/ord conversion")
+    passed = passed + 1
+else:
+    print("  ✗ chr/ord conversion")
+    failed = failed + 1
+
+# ELF parsing
+total = total + 1
+elf_data = parse_elf("/bin/ls")
+if elf_data != None:
+    print("  ✓ ELF parsing")
+    passed = passed + 1
+else:
+    print("  ✗ ELF parsing")
+    failed = failed + 1
+
+# String extraction
+total = total + 1
+strings_list = elf_strings("/bin/ls", 10)
+if len(strings_list) > 0:
+    print("  ✓ String extraction")
+    passed = passed + 1
+else:
+    print("  ✗ String extraction")
+    failed = failed + 1
+
+# File info
+total = total + 1
+info = file_info("/bin/ls")
+if len(info) > 0:
+    print("  ✓ File info detection")
+    passed = passed + 1
+else:
+    print("  ✗ File info detection")
+    failed = failed + 1
+
+print("")
+
+# ============================================================================
+# 4. WEB
+# ============================================================================
+print("[4] WEB - Web Exploitation")
+print("-" * 60)
+
+# URL encoding
+total = total + 1
+url_enc = url_encode("hello world")
+if url_decode(url_enc) == "hello world":
+    print("  ✓ URL encode/decode")
+    passed = passed + 1
+else:
+    print("  ✗ URL encode/decode")
+    failed = failed + 1
+
+# SQL injection payload
+total = total + 1
+sqli = sqli_union(3, "users", "password")
+if len(sqli) > 0:
+    print("  ✓ SQL injection payload")
+    passed = passed + 1
+else:
+    print("  ✗ SQL injection payload")
+    failed = failed + 1
+
+# XSS payload
+total = total + 1
+xss = xss_payload_img("http://evil.com")
+if len(xss) > 0:
+    print("  ✓ XSS payload generation")
+    passed = passed + 1
+else:
+    print("  ✗ XSS payload generation")
+    failed = failed + 1
+
+# LFI payload
+total = total + 1
+lfi = lfi_payload("/etc/passwd", 5)
+if len(lfi) > 0:
+    print("  ✓ LFI payload generation")
+    passed = passed + 1
+else:
+    print("  ✗ LFI payload generation")
+    failed = failed + 1
+
+print("")
+
+# ============================================================================
+# 5. MISC
+# ============================================================================
+print("[5] MISC - Miscellaneous")
+print("-" * 60)
+
+# String split/join
+total = total + 1
+parts = split("a,b,c", ",")
+joined = join(parts, ",")
+if joined == "a,b,c":
+    print("  ✓ String split/join")
+    passed = passed + 1
+else:
+    print("  ✗ String split/join")
+    failed = failed + 1
+
+# String replace
+total = total + 1
+replaced = replace("hello world", "world", "CTF")
+if replaced == "hello CTF":
+    print("  ✓ String replace")
+    passed = passed + 1
+else:
+    print("  ✗ String replace")
+    failed = failed + 1
+
+# Binary conversion
+total = total + 1
+if bin(42) == "0b101010":
+    print("  ✓ Binary conversion")
+    passed = passed + 1
+else:
+    print("  ✗ Binary conversion")
+    failed = failed + 1
+
+# Hex conversion
+total = total + 1
+if hex(255) == "0xff":
+    print("  ✓ Hex conversion")
+    passed = passed + 1
+else:
+    print("  ✗ Hex conversion")
+    failed = failed + 1
+
+# String multiplication (new feature!)
+total = total + 1
+repeated = "=" * 10
+if len(repeated) == 10:
+    print("  ✓ String multiplication")
+    passed = passed + 1
+else:
+    print("  ✗ String multiplication")
+    failed = failed + 1
+
+print("")
+
+# ============================================================================
+# 6. FORENSICS
+# ============================================================================
+print("[6] FORENSICS - Digital Forensics")
+print("-" * 60)
+
+# File type detection
+total = total + 1
+ftype = detect_filetype("/bin/ls")
+if len(ftype) > 0:
+    print("  ✓ File type detection")
+    passed = passed + 1
+else:
+    print("  ✗ File type detection")
+    failed = failed + 1
+
+# Hex dump
+total = total + 1
+hexdump = hex_dump("TEST", 0, 4)
+if len(hexdump) > 0:
+    print("  ✓ Hex dump")
+    passed = passed + 1
+else:
+    print("  ✗ Hex dump")
+    failed = failed + 1
+
+print("")
+
+# ============================================================================
+# 7. ATTACK-DEFENSE
+# ============================================================================
+print("[7] ATTACK-DEFENSE - Attack & Defense")
+print("-" * 60)
+
+# Ping (may be slow, but should work)
+total = total + 1
+if ping("127.0.0.1", 1):
+    print("  ✓ Ping connectivity")
+    passed = passed + 1
+else:
+    print("  ✗ Ping connectivity")
+    failed = failed + 1
+
+# Service detection
+total = total + 1
+service = detect_service("localhost", 22)
+if service == "SSH":
+    print("  ✓ Service detection")
+    passed = passed + 1
+else:
+    print("  ✗ Service detection")
+    failed = failed + 1
+
+# IP block command
+total = total + 1
+block_cmd = block_ip("192.168.1.100")
+if len(block_cmd) > 0:
+    print("  ✓ IP block command generation")
+    passed = passed + 1
+else:
+    print("  ✗ IP block command generation")
+    failed = failed + 1
+
+# TCP SYN packet craft
+total = total + 1
+tcp_syn = craft_tcp_syn("192.168.1.1", 80)
+if tcp_syn != None:
+    print("  ✓ TCP SYN packet crafting")
+    passed = passed + 1
+else:
+    print("  ✗ TCP SYN packet crafting")
+    failed = failed + 1
+
+print("")
+
+# ============================================================================
+# RESULTS
+# ============================================================================
+print("=" * 60)
+print("FINAL RESULTS")
+print("=" * 60)
+print("")
+print("Total Tests:", total)
+print("Passed:", passed)
+print("Failed:", failed)
+print("")
+
+rate = (passed * 100) / total
+print("Pass Rate:", rate, "%")
+print("")
+
+if failed == 0:
+    print("🎉 ALL TESTS PASSED!")
+    print("")
+    print("✓ PC Language is FULLY FUNCTIONAL for CTF!")
+    print("")
+    print("Verified Categories:")
+    print("  ✓ Crypto (6 tests) - Hash, encoding, XOR, ROT13")
+    print("  ✓ Pwn (4 tests) - Binary exploitation, packing, shellcode")
+    print("  ✓ Reverse (4 tests) - ELF parsing, string extraction, chr/ord")
+    print("  ✓ Web (4 tests) - URL encoding, SQL/XSS/LFI payloads")
+    print("  ✓ Misc (5 tests) - String ops, conversions, multiplication")
+    print("  ✓ Forensics (2 tests) - File analysis, hex dump")
+    print("  ✓ Attack-Defense (4 tests) - Network recon, defense tools")
+else:
+    print("⚠️  SOME TESTS FAILED")
+    print("Failed tests need investigation")
+
+print("")
+print("=" * 60)

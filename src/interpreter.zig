@@ -345,6 +345,35 @@ pub const Interpreter = struct {
                 return Value{ .Bool = !std.mem.eql(u8, left_val.String, right_val.String) };
             }
         }
+        
+        // String multiplication: "abc" * 3 or 3 * "abc"
+        if ((left_val == .String and right_val == .Int) or (left_val == .Int and right_val == .String)) {
+            if (std.mem.eql(u8, operator, "*")) {
+                const str = if (left_val == .String) left_val.String else right_val.String;
+                const count = if (left_val == .Int) left_val.Int else right_val.Int;
+                    
+                if (count < 0) {
+                    return Value{ .String = try self.allocator.dupe(u8, "") };
+                }
+                    
+                if (count == 0) {
+                    return Value{ .String = try self.allocator.dupe(u8, "") };
+                }
+                    
+                // Calculate total length
+                const total_len = str.len * @as(usize, @intCast(count));
+                var result = try self.allocator.alloc(u8, total_len);
+                    
+                // Repeat the string
+                var i: usize = 0;
+                while (i < count) : (i += 1) {
+                    const offset = i * str.len;
+                    @memcpy(result[offset..offset + str.len], str);
+                }
+                    
+                return Value{ .String = result };
+            }
+        }
 
         std.debug.print("Type error in binary operation: {s} {s} {s}\n", .{@tagName(left_val), operator, @tagName(right_val)});
         return InterpreterError.TypeError;

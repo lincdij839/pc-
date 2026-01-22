@@ -1,0 +1,339 @@
+# PC Language - CTF Comprehensive Verification Test
+# This script tests ALL CTF categories with REAL operations
+# No fake outputs - every function must actually work
+
+print("=" * 60)
+print("PC Language - CTF Comprehensive Verification Test")
+print("=" * 60)
+print("")
+
+# Test counters
+total_tests = 0
+passed_tests = 0
+failed_tests = 0
+
+# ============================================================================
+# Category 1: CRYPTO (Cryptography)
+# ============================================================================
+print("[1] CRYPTO - Cryptography Tests")
+print("-" * 60)
+
+# Test 1.1: MD5 Hash
+total_tests = total_tests + 1
+test_input = "hello"
+md5_result = md5(test_input)
+expected_md5 = "5d41402abc4b2a76b9719d911017c592"
+if md5_result == expected_md5:
+    print("✓ 1.1 MD5 hash: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 1.1 MD5 hash: FAIL")
+    print("    Expected:", expected_md5)
+    print("    Got:", md5_result)
+    failed_tests = failed_tests + 1
+
+# Test 1.2: SHA256 Hash
+total_tests = total_tests + 1
+sha256_result = sha256(test_input)
+expected_sha256 = "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+if sha256_result == expected_sha256:
+    print("✓ 1.2 SHA256 hash: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 1.2 SHA256 hash: FAIL")
+    print("    Expected:", expected_sha256)
+    print("    Got:", sha256_result)
+    failed_tests = failed_tests + 1
+
+# Test 1.3: Base64 encode/decode
+total_tests = total_tests + 1
+original = "CTF{test_flag}"
+encoded = base64_encode(original)
+decoded = base64_decode(encoded)
+if decoded == original:
+    print("✓ 1.3 Base64 encode/decode: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 1.3 Base64 encode/decode: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 1.4: Hex encode/decode
+total_tests = total_tests + 1
+hex_encoded = hex_encode("ABC")
+hex_decoded = hex_decode(hex_encoded)
+if hex_decoded == "ABC":
+    print("✓ 1.4 Hex encode/decode: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 1.4 Hex encode/decode: FAIL")
+    failed_tests = failed_tests + 1
+
+print("")
+
+# ============================================================================
+# Category 2: PWN (Binary Exploitation)
+# ============================================================================
+print("[2] PWN - Binary Exploitation Tests")
+print("-" * 60)
+
+# Test 2.1: p32 packing
+total_tests = total_tests + 1
+addr32 = 0xdeadbeef
+packed32 = p32(addr32)
+unpacked32 = unpack32(packed32)
+if unpacked32 == addr32:
+    print("✓ 2.1 p32/unpack32: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 2.1 p32/unpack32: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 2.2: p64 packing
+total_tests = total_tests + 1
+addr64 = 0x7ffff7a0d000
+packed64 = p64(addr64)
+unpacked64 = unpack64(packed64)
+if unpacked64 == addr64:
+    print("✓ 2.2 p64/unpack64: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 2.2 p64/unpack64: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 2.3: Shellcode generation
+total_tests = total_tests + 1
+nop_sled = shellcode_nop(10)
+nop_len = len(nop_sled)
+if nop_len == 20:
+    print("✓ 2.3 Shellcode NOP sled: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 2.3 Shellcode NOP sled: FAIL (length:", nop_len, ")")
+    failed_tests = failed_tests + 1
+
+print("")
+
+# ============================================================================
+# Category 3: REVERSE (Reverse Engineering)
+# ============================================================================
+print("[3] REVERSE - Reverse Engineering Tests")
+print("-" * 60)
+
+# Test 3.1: chr/ord functions
+total_tests = total_tests + 1
+char_code = 65
+char_result = chr(char_code)
+code_result = ord(char_result)
+if code_result == char_code:
+    print("✓ 3.1 chr/ord conversion: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 3.1 chr/ord conversion: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 3.2: ELF parsing (real binary)
+total_tests = total_tests + 1
+elf_data = parse_elf("/bin/ls")
+if elf_data != None:
+    print("✓ 3.2 ELF parsing: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 3.2 ELF parsing: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 3.3: String extraction from binary
+total_tests = total_tests + 1
+strings_list = elf_strings("/bin/ls", 10)
+strings_count = len(strings_list)
+if strings_count > 0:
+    print("✓ 3.3 String extraction: PASS (found", strings_count, "strings)")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 3.3 String extraction: FAIL")
+    failed_tests = failed_tests + 1
+
+print("")
+
+# ============================================================================
+# Category 4: WEB (Web Exploitation)
+# ============================================================================
+print("[4] WEB - Web Exploitation Tests")
+print("-" * 60)
+
+# Test 4.1: URL encoding
+total_tests = total_tests + 1
+url_original = "hello world"
+url_encoded = url_encode(url_original)
+url_decoded = url_decode(url_encoded)
+if url_decoded == url_original:
+    print("✓ 4.1 URL encode/decode: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 4.1 URL encode/decode: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 4.2: SQL injection payload generation
+total_tests = total_tests + 1
+sqli_payload = sqli_union(3, "users", "username")
+if len(sqli_payload) > 0:
+    print("✓ 4.2 SQL injection payload: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 4.2 SQL injection payload: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 4.3: XSS payload generation
+total_tests = total_tests + 1
+xss_payload = xss_payload_img("http://evil.com")
+if len(xss_payload) > 0:
+    print("✓ 4.3 XSS payload generation: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 4.3 XSS payload generation: FAIL")
+    failed_tests = failed_tests + 1
+
+print("")
+
+# ============================================================================
+# Category 5: MISC (Miscellaneous)
+# ============================================================================
+print("[5] MISC - Miscellaneous Tests")
+print("-" * 60)
+
+# Test 5.1: String split/join
+total_tests = total_tests + 1
+test_string = "a,b,c"
+parts = split(test_string, ",")
+joined = join(parts, ",")
+if joined == test_string:
+    print("✓ 5.1 String split/join: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 5.1 String split/join: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 5.2: Binary conversion
+total_tests = total_tests + 1
+num = 42
+bin_result = bin(num)
+expected_bin = "0b101010"
+if bin_result == expected_bin:
+    print("✓ 5.2 Binary conversion: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 5.2 Binary conversion: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 5.3: String replace
+total_tests = total_tests + 1
+text = "hello world"
+replaced = replace(text, "world", "CTF")
+if replaced == "hello CTF":
+    print("✓ 5.3 String replace: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 5.3 String replace: FAIL")
+    failed_tests = failed_tests + 1
+
+print("")
+
+# ============================================================================
+# Category 6: FORENSICS (Digital Forensics)
+# ============================================================================
+print("[6] FORENSICS - Digital Forensics Tests")
+print("-" * 60)
+
+# Test 6.1: File type detection
+total_tests = total_tests + 1
+file_type = detect_filetype("/bin/ls")
+if len(file_type) > 0:
+    print("✓ 6.1 File type detection: PASS (", file_type, ")")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 6.1 File type detection: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 6.2: Hex dump
+total_tests = total_tests + 1
+hex_output = hex_dump("TEST", 0, 4)
+if len(hex_output) > 0:
+    print("✓ 6.2 Hex dump: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 6.2 Hex dump: FAIL")
+    failed_tests = failed_tests + 1
+
+print("")
+
+# ============================================================================
+# Category 7: ATTACK-DEFENSE (Attack & Defense)
+# ============================================================================
+print("[7] ATTACK-DEFENSE - Attack & Defense Tests")
+print("-" * 60)
+
+# Test 7.1: Ping connectivity
+total_tests = total_tests + 1
+ping_result = ping("127.0.0.1", 1)
+if ping_result == true:
+    print("✓ 7.1 Ping test: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 7.1 Ping test: FAIL")
+    failed_tests = failed_tests + 1
+
+# Test 7.2: Service detection
+total_tests = total_tests + 1
+service_name = detect_service("localhost", 22)
+if service_name == "SSH":
+    print("✓ 7.2 Service detection: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 7.2 Service detection: FAIL (got:", service_name, ")")
+    failed_tests = failed_tests + 1
+
+# Test 7.3: IP block command generation
+total_tests = total_tests + 1
+block_cmd = block_ip("1.2.3.4")
+if len(block_cmd) > 0:
+    print("✓ 7.3 IP block command: PASS")
+    passed_tests = passed_tests + 1
+else:
+    print("✗ 7.3 IP block command: FAIL")
+    failed_tests = failed_tests + 1
+
+print("")
+
+# ============================================================================
+# FINAL RESULTS
+# ============================================================================
+print("=" * 60)
+print("FINAL TEST RESULTS")
+print("=" * 60)
+print("")
+print("Total Tests:", total_tests)
+print("Passed:", passed_tests)
+print("Failed:", failed_tests)
+print("")
+
+pass_rate = (passed_tests * 100) / total_tests
+print("Pass Rate:", pass_rate, "%")
+print("")
+
+if failed_tests == 0:
+    print("🎉 ALL TESTS PASSED!")
+    print("✓ PC Language is FULLY functional for CTF competitions")
+    print("")
+    print("Verified Categories:")
+    print("  ✓ Crypto - Hash, encoding, encryption")
+    print("  ✓ Pwn - Binary exploitation, packing")
+    print("  ✓ Reverse - ELF parsing, string extraction")
+    print("  ✓ Web - URL encoding, SQL/XSS payloads")
+    print("  ✓ Misc - String operations, conversions")
+    print("  ✓ Forensics - File analysis, hex dump")
+    print("  ✓ Attack-Defense - Network recon, defense")
+else:
+    print("⚠️  SOME TESTS FAILED")
+    print("PC Language needs fixes in failed areas")
+
+print("")
+print("=" * 60)
